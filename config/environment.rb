@@ -1,18 +1,18 @@
 # Be sure to restart your web server when you modify this file.
 
-# Uncomment below to force Rails into production mode when 
+# Uncomment below to force Rails into production mode when
 # you don't control web/app server and can't set it the proper way
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '1.2.2' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here
-  
+
   # Skip frameworks you're not going to use (only works if using vendor/rails)
   # config.frameworks -= [ :action_web_service, :action_mailer ]
 
@@ -22,7 +22,7 @@ Rails::Initializer.run do |config|
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
 
-  # Force all environments to use the same logger level 
+  # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
   # config.log_level = :debug
 
@@ -31,7 +31,7 @@ Rails::Initializer.run do |config|
   config.action_controller.session_store = :active_record_store
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
-  # This is necessary if your schema can't be completely dumped by the schema dumper, 
+  # This is necessary if your schema can't be completely dumped by the schema dumper,
   # like if you have constraints or database-specific column types
   config.active_record.schema_format = :sql
 
@@ -40,11 +40,11 @@ Rails::Initializer.run do |config|
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
-  
+
   # See Rails::Configuration for more options
 end
 
-# Add new inflection rules using the following format 
+# Add new inflection rules using the following format
 # (all these examples are active by default):
 # Inflector.inflections do |inflect|
 #   inflect.plural /^(ox)$/i, '\1en'
@@ -59,7 +59,7 @@ end
 
 # Include your application configuration below
 
-# The idiomatic way to do this is to write a plugin, but I don't have time to do that.     
+# The idiomatic way to do this is to write a plugin, but I don't have time to do that.
 class ActiveRecord::Base
   # This class method generates methods like this one:
   #
@@ -118,7 +118,7 @@ class ActiveRecord::ConnectionAdapters::Column
         original_value_to_decimal(v)
       end
     end
-    
+
     # This method is called both when dates are set in the model, and
     # when dates are loaded from the database. So we let the original
     # parser do its job, and give a chance to ours if it fails.
@@ -139,7 +139,7 @@ class String
   def isucc
     self.dup.isucc!
   end
-  
+
   def isucc!
     sub!(/\d+/) {|i| i.succ}
   end
@@ -183,7 +183,7 @@ end
 require mailer_rb
 
 if RAILS_ENV == 'production'
-  #Change to true to work with SSL and uncomment lines in controllers 
+  #Change to true to work with SSL and uncomment lines in controllers
   #containing this_controller_only_responds_to_https
   USE_SSL = false
   # Trigger controller class loading to execute SSL-related
@@ -193,7 +193,7 @@ if RAILS_ENV == 'production'
      # known to work without directories
     "#{c.camelize}Controller".constantize
   end
-  XSendFile::Plugin.replace_send_file! 
+  XSendFile::Plugin.replace_send_file!
 else
   USE_SSL = false
 end
