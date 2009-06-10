@@ -18,3 +18,5 @@ coverage/*
 TAGS
 nbproject
 config/local_config.rb
+config/facturagem.yml
+config/mailer.rb
