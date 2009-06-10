@@ -32,14 +32,14 @@ No known version requirement.
 
 == Gems
 
-mini_magick (1.2.0)
-fastercsv (1.2.0)
-rexml-expansion-fix
+* mini_magick (1.2.0)
+* fastercsv (1.2.0)
+* rexml-expansion-fix
 
 
 == mod_xsendfile (for production mode)
 
-http://tn123.ath.cx/mod_xsendfile/
+  http://tn123.ath.cx/mod_xsendfile/
 
 == MySQL
 
