@@ -1,5 +1,5 @@
-Ruby
-----
+== Ruby
+
 This application was developed with Ruby 1.8.4 and Ruby 1.8.5.
 
 Before compiling Ruby from sources be sure that the zlib dev files are installed,
@@ -11,13 +11,12 @@ If you get a silent prompt back it is installed, otherwise you see an error.
 
 The readline library should be available as well, otherwise script/console won't work.
 
-Rails comes bundled
--------------------
+== Rails comes bundled
+
 Rails 1.2.2 comes bundled under vendor, no need to install it separately.
 Don't worry if there's a system-wide Rails, if so it is ignored.
 
-Rubygems
---------
+== Rubygems
 
 Some dependencies are installed using the gem library manager:
 
@@ -26,25 +25,24 @@ Some dependencies are installed using the gem library manager:
   cd rubygems-0.9.0
   sudo ruby setup.rb
 
-ImageMagick
------------
+== ImageMagick
+
 No known version requirement.
 
 
-Gems
-----
+== Gems
+
 mini_magick (1.2.0)
 fastercsv (1.2.0)
 rexml-expansion-fix
 
 
-mod_xsendfile (for production mode)
------------------------------------
+== mod_xsendfile (for production mode)
+
 http://tn123.ath.cx/mod_xsendfile/
 
+== MySQL
 
-MySQL
------
 Stable version of MySQL 5.
 
 It is very important to set UTF-8 as charset of the database explicitly,
@@ -66,10 +64,10 @@ schema running
 from the application root directory. If you need to update the production schema set RAILS_ENV to 'production' before. For instance in sh-like shells:
 
   export RAILS_ENV=production && rake db:migrate
-  
 
-Configuration files
--------------------
+
+== Configuration files
+
 You need to create
 
   config/facturagem.yml
@@ -80,8 +78,8 @@ You need to create
 taking their corresponding .example as a starting point.
 
 
-exception_notification (http://www.agilewebdevelopment.com/plugins/exception_notifier)
---------------------------------------------------------------------------------------
+== exception_notification (http://www.agilewebdevelopment.com/plugins/exception_notifier)
+
 The Exception Notifier plugin provides a mailer object and a default set of
 templates for sending email notifications when errors occur in a Rails
 application. The plugin is configurable, allowing programmers to specify:
@@ -90,13 +88,17 @@ application. The plugin is configurable, allowing programmers to specify:
 * the recipient addresses
 * the text used to prefix the subject line
 
-google_analytics
-----------------
-Google Analytics is a free service offered by Google that generates 
+== google_analytics
+
+Google Analytics is a free service offered by Google that generates
 detailed statistics about the visitors to a website
 
-LaTeX
------
-We need pdflatex in path (install tetex-bin, tetex-extra, latex-ucs, latex-xcolor, cm-super in debians, 
-or MiKTeX on Windows). The package cm-super makes fonts in PDFs look prettier, but it is necessary to have 
+== LaTeX
+
+We need pdflatex in path (install tetex-bin, tetex-extra, latex-ucs, latex-xcolor, cm-super in debians,
+or MiKTeX on Windows). The package cm-super makes fonts in PDFs look prettier, but it is necessary to have
 a working instance for development.
+
+== TODO
+
+* Find a replacement for the old fiveruns_manage plugin (if needed)
