@@ -1,10 +1,19 @@
 = RedHill on Rails Core
 
-RedHill on Rails Core is a plugin that adds the following features:
+RedHill on Rails Core is a plugin that features to support other RedHill on Rails plugins.  Those features include:
 
-* Generic support for foreign-keys;
-* Mechanism for obtaining indexes directly from a model class; and
-* A mechanism for determining when <code>Schema.define()</code> is running.
+* Creating and dropping views;
+* Creating and removing foreign-keys;
+* Obtaining indexes directly from a model class; and
+* Determining when <code>Schema.define()</code> is running.
+
+=== View Support
+
+The plugin provides a mechanism for creating and dropping views as well as
+preserving views when performing a schema dump:
+
+  create_view :normal_customers, "SELECT * FROM customers WHERE status = 'normal'"
+  drop_view :normal_customers
 
 === Foreign Key Support
 
@@ -32,6 +41,16 @@ You also have the option of specifying what to do on delete/update using
 The second method allows you to create arbitrary foreign-keys at any time:
 
   add_foreign_key(:orders, :customer_id, :customers, :id, :on_delete => :set_null, :on_update => :cascade)
+
+In either case, if your database supports deferred foreign keys (for example PostgreSQL) you can specify this as well:
+
+  t.foreign_key :customer_id, :customers, :id, :deferrable => true
+  add_foreign_key(:orders, :customer_id, :customers, :id, :deferrable => true)
+
+By default, the foreign key will be assigned a name by the underlying database. However, if this doesn't suit
+your needs, you can override the default assignment using the <code>:name</code> option:
+
+  add_foreign_key(:orders, :customer_id, :customers, :id, :on_delete => :set_null, :on_update => :cascade, <strong>:name => :orders_customer_id_foreign_key<strong>)
 
 You can also query the foreign keys for a model yourself by calling <code>foreign_keys()</code>:
 
@@ -61,6 +80,25 @@ each test, you should list your fixtures in order of parent->child. For example:
 
 Rails will then set-up and tear-down the fixtures in the correct sequence.
 
+Some databases (PostgreSQL and MySQL for example) allow you to set a comment for a
+table. You can do this for existing tables by using:
+
+  set_table_comment :orders, "All pending and processed orders"
+
+or even at the time of creation:
+
+  create_table :orders, :comment => "All pending and processed orders" do |t|
+    ...
+  end
+
+You can clear table comments using:
+
+  clear_table_comment :orders
+
+There is also a rake tasks to show all database tables and their comments:
+
+  rake db:comments
+
 The plugin fully supports and understands the following active-record
 configuration properties:
 
@@ -86,16 +124,20 @@ as some migration plugins must change their behaviour accordingly.
 
 === Case-insensitive Indexes
 
-For PostgreSQL, you can add an option <code>:ignore_case => true</code> to <code>add_index</code>
+For PostgreSQL, you can add an option <code>:case_sensitive => false</code> to <code>add_index</code>
 which will generate an expression index of the form:
 
-  lower(column_name)
+  LOWER(column_name)
 
 This means finder queries of the form:
 
-  WHERE lower(column_name) = lower(?)
+  WHERE LOWER(column_name) = LOWER(?)
 
 are able to use the indexes rather require, in the worst case, full-table scans.
+
+Note also that this ties in well with Rails built-in support for case-insensitive searching:
+
+  validates_uniqueness_of :name, :case_sensitive => false
 
 === See Also
 

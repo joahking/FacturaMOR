@@ -2,6 +2,7 @@ module RedHillConsulting::Core::ActiveRecord::ConnectionAdapters
   module TableDefinition
     def self.included(base)
       base.class_eval do
+        attr_accessor :name
         alias_method_chain :initialize, :redhillonrails_core
         alias_method_chain :to_sql, :redhillonrails_core
       end
@@ -13,7 +14,7 @@ module RedHillConsulting::Core::ActiveRecord::ConnectionAdapters
     end
 
     def foreign_key(column_names, references_table_name, references_column_names, options = {})
-      @foreign_keys << ForeignKeyDefinition.new(column_names, ActiveRecord::Migrator.proper_table_name(references_table_name), references_column_names, options[:on_update], options[:on_delete])
+      @foreign_keys << ForeignKeyDefinition.new(options[:name], nil, column_names, ActiveRecord::Migrator.proper_table_name(references_table_name), references_column_names, options[:on_update], options[:on_delete], options[:deferrable])
       self
     end
 

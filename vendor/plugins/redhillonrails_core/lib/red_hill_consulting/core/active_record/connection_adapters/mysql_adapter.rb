@@ -6,6 +6,14 @@ module RedHillConsulting::Core::ActiveRecord::ConnectionAdapters
       end
     end
 
+    def set_table_comment(table_name, comment)
+      execute "ALTER TABLE #{table_name} COMMENT='#{quote_string(comment)}'"
+    end
+    
+    def clear_table_comment(table_name)
+      execute "ALTER TABLE #{table_name} COMMENT=''"
+    end
+
     def remove_foreign_key(table_name, foreign_key_name)
       execute "ALTER TABLE #{table_name} DROP FOREIGN KEY #{foreign_key_name}"
     end
@@ -34,7 +42,7 @@ module RedHillConsulting::Core::ActiveRecord::ConnectionAdapters
             on_update = on_update.downcase.gsub(' ', '_').to_sym if on_update
             on_delete = on_delete.downcase.gsub(' ', '_').to_sym if on_delete
 
-            foreign_keys << ForeignKey.new(name,
+            foreign_keys << ForeignKeyDefinition.new(name,
                                            table_name, column_names.gsub('`', '').split(', '),
                                            references_table_name, references_column_names.gsub('`', '').split(', '),
                                            on_update, on_delete)
