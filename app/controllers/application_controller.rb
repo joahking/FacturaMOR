@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
 
   # Inspired by http://jroller.com/page/obie?entry=wrestling_with_the_bots
   session :off, :if => lambda { |req| robot?(req.user_agent) }
-  
+
   filter_parameter_logging :password
 
   def self.robot?(ua)
@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
       Lycos_Spider |
       Infoseek
     }xi
-    
+
     if ua =~ robot_regexp
       logger.info("Request from robot #{ua}.")
       return true
@@ -49,18 +49,18 @@ class ApplicationController < ActionController::Base
     # because in that case routes rules make Rails set the login_token back in the URL and
     # that produces infinite recursion.
     if logged_in_as_guest?
-      redirect_to_url "http://www.#{account_domain}"
+      redirect_to "http://www.#{account_domain}"
     else
       redirect_to :controller => 'account', :action => 'login', :login_token => nil
     end
     false
   end
-  
+
   def ensure_can_write
     can_write? ? true : logout
   end
   protected :ensure_can_write
-  
+
   def ensure_can_read_all
     can_read_all? ? true : logout
   end
@@ -71,19 +71,19 @@ class ApplicationController < ActionController::Base
     @current_controller = controller_name
   end
   protected :set_controller_and_action_names
-  
+
   # We need this redirection not only for users, I founded that some bots
   # request public pages to our domain directly. We need to respond
   # with the appropiate redirection so they don't index the error page.
   # They would because the error page is a successful HTTP response.
   def ensure_subdomain
     if account_subdomain.blank?
-      redirect_to_url "http://www.#{account_domain}#{request.request_uri}"
+      redirect_to "http://www.#{account_domain}#{request.request_uri}"
       return false
     end
     return true
   end
-  
+
   # Prevents account sites from accessing to the public side. This filter
   # assumes the root page is not under public, which is to be expected, and
   # redirects there if needed. In factura the root page is configured in
@@ -105,7 +105,7 @@ class ApplicationController < ActionController::Base
     end
   end
   protected :find_account
-  
+
   def find_user_or_guest
     # if the account was just created perform auto-login of the owner
     if @current_account.direct_login?
@@ -113,7 +113,7 @@ class ApplicationController < ActionController::Base
       self.current_user = @current_account.owner
       return true
     end
-    
+
     # see if this is a guest request now
     @guest = session[:guest] # let @guess be initialized no matter what
     if @guest
@@ -137,7 +137,7 @@ class ApplicationController < ActionController::Base
         return false
       end
     end
-        
+
     login_required
     if logged_in?
       if @current_account == current_user.account
@@ -153,7 +153,7 @@ class ApplicationController < ActionController::Base
     end
   end
   protected :find_user_or_guest
-  
+
   def ensure_we_have_fiscal_data
     if @current_account.fiscal_data.nil?
       redirect_to :controller => 'fdata', :action => 'new'
@@ -171,7 +171,7 @@ class ApplicationController < ActionController::Base
     options[:page] = options[:page] || params[:page] || 1
     default_options = {:per_page => CONFIG['pagination_window'], :page => 1}
     options = default_options.merge(options)
-    
+
     pages = Paginator.new(self, collection.size, options[:per_page], options[:page])
     first = pages.current.offset
     last = [first + options[:per_page], collection.size].min
@@ -213,26 +213,26 @@ class ApplicationController < ActionController::Base
     direction
   end
   protected :direction
-  
+
   def self.xhr_only(method_name)
     verify :xhr => true, :only => method_name, :render => {:nothing => true}
   end
-  
+
   # see http://www.iopus.com/imacros/demo/v6/user-agent.htm
   def request_from_a_mac?
     !request.env['HTTP_USER_AGENT'].downcase.index('macintosh').nil?
   end
-  
+
   # see http://www.iopus.com/imacros/demo/v6/user-agent.htm
   def request_from_windows?
     !request.env['HTTP_USER_AGENT'].downcase.index('windows').nil?
   end
-  
+
   # Send alerts on key events to monitor the health of the application.
   def devalert(subject, body='', extra_to=[])
     Mailer.deliver_devalert("[#{APP_NAME}] #{subject}", body, extra_to) if RAILS_ENV == 'production'
   end
-  
+
   # A controller makes this call to declare all their actions run behind SSL.
   # The call must be put at the bottom of the code, so that the public methods
   # are known and returned by public_instance_methods.

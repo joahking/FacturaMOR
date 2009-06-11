@@ -1,5 +1,4 @@
 require 'set'
-require 'fastercsv'
 require 'iconv'
 
 class InvoicesController < ApplicationController
@@ -82,6 +81,7 @@ class InvoicesController < ApplicationController
       )
     end
   end
+
   private :paginator
 
   def toggle_paid_status

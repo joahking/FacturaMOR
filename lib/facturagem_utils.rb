@@ -8,11 +8,11 @@ module FacturagemUtils
   def self.normalize_for_sorting(str)
     normalize(str).tr('_/\\', '-')
   end
-  
+
   def self.normalize_for_url_id(str)
     normalize(str).tr(' /\\', '-')
   end
-  
+
   # The trick with iconv does not work in Acens due to the version of the library there.
   def self.normalize(str)
     return '' if str.nil?
@@ -44,11 +44,11 @@ module FacturagemUtils
     n.tr!('^ a-z0-9_/\\-',    '')
     n
   end
-  
+
   def self.random_hex_string
     Digest::SHA1.hexdigest(Time.now.to_s.split(//).sort_by {rand}.join)
   end
-  
+
   # We use 63 characters and tokens of length 23, which gives 63**23 possible tokens, that's:
   #
   #   242567514087541147634431480398346066867647 (42 digits)
@@ -61,14 +61,14 @@ module FacturagemUtils
     23.times { token << @@token_chars[rand(@@token_chars.length)] }
     token
   end
-  
+
   class << self
     alias_method :random_chpass_token, :random_login_token
   end
-  
+
   # Copied from RTex
   BS        =	"\\\\"
-  BACKSLASH	=	"#{BS}textbackslash{}"
+  BACKSLASH =	"#{BS}textbackslash{}"
   HAT       =	"#{BS}textasciicircum{}"
   TILDE     =	"#{BS}textasciitilde{}"
   def self.escape_latex(str)
@@ -100,24 +100,24 @@ module FacturagemUtils
       return nil
     end
   end
-  
+
   def self.parse_integer(i)
     parse_decimal(i).to_i
   end
-  
+
   # Returns a BigDecimal out of the string n, 0.0.to_d on failure.
   def self.parse_decimal(n)
     return 0.0.to_d if n.blank?
 
     # remove everything that cannot be part of assume number, as currency symbols
     n.gsub!(/[^.,\d]+$/, '')
-    
+
     # if n has no comma just delegate to .to_d
     return n.to_d unless n.index(",")
-    
+
     # if it has a comma, but no dot, assume it is a decimal separator
     return n.sub(',', '.').to_d unless n.index(".")
-    
+
     # if we get here it has both a comma and a dot, strip whitespace
     n = n.strip
 
@@ -137,12 +137,12 @@ module FacturagemUtils
     # done
     return s*("#{n}.#{decimal_part}".to_d)
   end
-  
+
   def self.integer?(n)
     n = FacturagemUtils.parse_decimal(n) if n.is_a?(String)
     return n == n.to_i
   end
-  
+
   # This is regexp based because we control de source code (unless hacking, if the user
   # sends some HTML by hand he might get an ugly PDF, he deserves that in that case).
   def self.fckeditor_html_to_latex(html)
@@ -151,7 +151,7 @@ module FacturagemUtils
     REXML::Document.parse_stream(html, fl)
     return fl.latex
   end
-  
+
   # Based on
   #
   #  http://es.wikipedia.org/wiki/Algoritmo_para_obtener_la_letra_del_NIF
@@ -159,7 +159,7 @@ module FacturagemUtils
     return false unless code =~ /\A([0-9]{6,8})([A-Z])\z/
     return 'TRWAGMYFPDXBNJZSQVHLCKE'.at($1.to_i % 23) == $2 # same as NIE
   end
-  
+
   # Based on
   #
   #  http://es.wikipedia.org/wiki/Algoritmo_para_obtener_la_letra_del_NIF
@@ -169,7 +169,7 @@ module FacturagemUtils
     return false unless code =~ /\AX([0-9]{7,8})([A-Z])\z/
     return 'TRWAGMYFPDXBNJZSQVHLCKE'.at($1.to_i % 23) == $2 # same as NIF
   end
-  
+
   # Based on
   #
   #   http://www.latecladeescape.com/w0/content/view/93/49/
@@ -183,7 +183,7 @@ module FacturagemUtils
     return false unless code =~ /\A([A-HK-NPQS])([0-9]{7})([A-J0-9])\z/
     letter, digits, control = $1, $2, $3
     digits = digits.split(//).map(&:to_i)
-    
+
     x = 0
     digits.each_with_index {|d, i| x += i.even? ? 2*d % 10 + d/5 : d}
     x = 10 - (x % 10) unless x.zero?
@@ -197,12 +197,12 @@ module FacturagemUtils
       x.to_s == control || "JABCDEFGHI".at(x) == control
     end
   end
-  
+
   def self.fiscal_identifier?(code)
     code = code.strip.upcase.gsub(%r{[^0-9A-Z]}, '')
     return nif?(code) || nie?(code) || cif?(code)
   end
-  
+
   # We follow
   #
   #  http://www.euskalgraffiti.com/index.php/archives/2005/02/08/calculo-del-digito-de-control-de-una-cuenta-corriente/
@@ -213,7 +213,7 @@ module FacturagemUtils
     bank, office, control, account = break_bank_account_into_parts(account_number)
     bank_office = bank + office
     weights = [1, 2, 4, 8, 5, 10, 9, 7, 3, 6].reverse
-    
+
     n = 0
     weights.zip(bank_office.split(//).map(&:to_i).reverse).each do |w, d|
       break if d.nil?
@@ -223,7 +223,7 @@ module FacturagemUtils
     n = 0 if n == 11
     n = 1 if n == 10
     return false if n.to_s != control.at(0)
-    
+
     n = 0
     weights.zip(account.split(//).map(&:to_i).reverse).each do |w, d|
       n += w*d
@@ -232,14 +232,14 @@ module FacturagemUtils
     n = 0 if n == 11
     n = 1 if n == 10
     return false if n.to_s != control.at(1)
-    
+
     return true
   end
-  
+
   def self.break_bank_account_into_parts(bank_account)
     bank_account.gsub(/\D/, '').unpack('a4a4a2a10')
   end
-  
+
   def self.ip_belongs_to_trivium(ip)
     ip =~ /\A(?:62\.37\.232\.\d+|85\.158\.168\.\d+)\z/;
   end
@@ -250,17 +250,17 @@ __END__
 
 class FckeditorListener
   include REXML::StreamListener
-  
+
   attr_accessor :stack
   attr_accessor :latex
   attr_accessor :needs_hfill
-  
+
   def initialize
     @stack = []
     @latex = ''
     @needs_hfill = false
   end
-  
+
   def tag_start(name, attrs)
     case name
     when 'div'
@@ -287,11 +287,11 @@ class FckeditorListener
       self.needs_hfill = true
     end
   end
-  
+
   def text(text)
     self.latex << FacturagemUtils.escape_latex(text)
   end
-  
+
   def tag_end(name)
     case name
     when 'div'
