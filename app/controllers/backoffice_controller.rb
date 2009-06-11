@@ -1,8 +1,6 @@
 class BackofficeController < ApplicationController
   include FormatterHelper
 
-  PUBLIC_SINCE = Date.new(2007, 7, 18).to_time
-
   skip_before_filter :find_account
   skip_before_filter :find_user_or_guest
   skip_before_filter :ensure_we_have_fiscal_data
@@ -29,7 +27,6 @@ class BackofficeController < ApplicationController
 
   def index
     @naccounts                   = Account.count
-    @ninternet_accounts          = Account.count(:conditions => ['created_at >= ?', PUBLIC_SINCE])
     @ninvoices                   = Invoice.count
     @ninvoices_with_pdf          = InvoicePdf.count
     @ncustomers                  = Customer.count
