@@ -197,6 +197,3 @@ if RAILS_ENV == 'production'
 else
   USE_SSL = false
 end
-
-# See http://weblog.rubyonrails.org/2008/8/23/dos-vulnerabilities-in-rexml
-require 'rexml-expansion-fix'
