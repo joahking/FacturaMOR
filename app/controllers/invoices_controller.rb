@@ -1,5 +1,4 @@
 require 'set'
-require 'fastercsv'
 require 'iconv'
 
 class InvoicesController < ApplicationController
