@@ -5,29 +5,29 @@
 #
 #  id                        :integer(11)   not null, primary key
 #  account_id                :integer(11)   not null
-#  first_name                :string(255)   
-#  first_name_for_sorting    :string(255)   
-#  last_name                 :string(255)   
-#  last_name_for_sorting     :string(255)   
-#  created_at                :datetime      
-#  updated_at                :datetime      
-#  email                     :string(255)   
-#  crypted_password          :string(40)    
-#  salt                      :string(40)    
-#  remember_token            :string(255)   
-#  remember_token_expires_at :datetime      
-#  activation_code           :string(40)    
-#  activated_at              :datetime      
-#  is_blocked                :boolean(1)    
-#  last_seen_at              :datetime      
+#  first_name                :string(255)
+#  first_name_for_sorting    :string(255)
+#  last_name                 :string(255)
+#  last_name_for_sorting     :string(255)
+#  created_at                :datetime
+#  updated_at                :datetime
+#  email                     :string(255)
+#  crypted_password          :string(40)
+#  salt                      :string(40)
+#  remember_token            :string(255)
+#  remember_token_expires_at :datetime
+#  activation_code           :string(40)
+#  activated_at              :datetime
+#  is_blocked                :boolean(1)
+#  last_seen_at              :datetime
 #
 
 require 'digest/sha1'
 class User < ActiveRecord::Base
   belongs_to :account
-  
+
   add_for_sorting_to :first_name, :last_name
-  
+
   def fullname
     [first_name, last_name].reject { |x| x.blank? }.join(' ')
   end
@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   #                                                 #
   ##                                               ##
   #### ----------------------------------------- ####
-  
+
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :email
   validates_uniqueness_of   :email, :scope => 'account_id'
 
-  validates_length_of       :password, :within => 4..40, :if => :password_required?, :too_short => 'la contraseña es demasiado corta (mínimo %d carateres)', :too_long => '^La contraseña es demasiado larga (máximo %d carateres)'
+  validates_length_of       :password, :within => 4..40, :if => :password_required?, :too_short => 'la contraseña es demasiado corta (mínimo {{count}} carateres)', :too_long => '^La contraseña es demasiado larga (máximo {{count}} carateres)'
   validates_confirmation_of :password,                   :if => :password_required?, :message => 'la contraseña y su confirmación no coinciden'
 
   before_save :encrypt_password
@@ -79,7 +79,7 @@ class User < ActiveRecord::Base
   end
 
   def remember_token?
-    remember_token_expires_at && Time.now.utc < remember_token_expires_at 
+    remember_token_expires_at && Time.now.utc < remember_token_expires_at
   end
 
   # These create and unset the fields required for remembering users between browser closes
@@ -96,13 +96,13 @@ class User < ActiveRecord::Base
   end
 
   protected
-    # before filter 
+    # before filter
     def encrypt_password
       return if password.blank?
       self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{email}--") if new_record?
       self.crypted_password = encrypt(password)
     end
-    
+
     def password_required?
       #crypted_password.blank? || !password.blank?
       crypted_password.blank? || !password.nil?
