@@ -11,37 +11,7 @@ class ApplicationController < ActionController::Base
   before_filter :ensure_we_have_fiscal_data
   before_filter :handle_eventual_announcement
 
-  session :session_key => '_facturagem_mor_session_id'
-
-  # Inspired by http://jroller.com/page/obie?entry=wrestling_with_the_bots
-  session :off, :if => lambda { |req| robot?(req.user_agent) }
-
   filter_parameter_logging :password
-
-  def self.robot?(ua)
-    robot_regexp = %r{
-      Baidu        |
-      Gigabot      |
-      Google       |
-      libwww-perl  |
-      lwp-trivial  |
-      msnbot       |
-      SiteUptime   |
-      Slurp        |
-      WordPress    |
-      ZIBB         |
-      ZyBorg       |
-      Yahoo        |
-      Lycos_Spider |
-      Infoseek
-    }xi
-
-    if ua =~ robot_regexp
-      logger.info("Request from robot #{ua}.")
-      return true
-    end
-    return false
-  end
 
   def logout
     reset_session
