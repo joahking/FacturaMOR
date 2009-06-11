@@ -82,6 +82,7 @@ class InvoicesController < ApplicationController
       )
     end
   end
+
   private :paginator
 
   def toggle_paid_status

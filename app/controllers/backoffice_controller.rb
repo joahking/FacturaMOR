@@ -23,12 +23,12 @@ class BackofficeController < ApplicationController
     end
     render :action => 'login', :layout => 'public'
   end
-  
+
   def logout
     reset_session
     redirect_to :controller => 'public'
   end
-  
+
   def index
     @naccounts                   = Account.count
     @ninternet_accounts          = Account.count(:conditions => ['created_at >= ?', PUBLIC_SINCE])
@@ -45,14 +45,14 @@ class BackofficeController < ApplicationController
       ) as invoice_counters_per_account
     SQL
   end
-  
+
   def flat_rate
     @accounts = []
     Account.find_each(:order => 'accounts.created_at DESC') do |account|
       @accounts << account if account.pays_by_bank?
     end
   end
-  
+
   # This method has no interface. We were asked to export accounts as CSV to do
   # some analysis and I programmed it as an action for the same price.
   def export_accounts
@@ -79,11 +79,11 @@ class BackofficeController < ApplicationController
     end
     send_data(csv_string, :type => "text/csv; charset=#{charset}", :filename => "accounts_#{Time.now.strftime("%Y%m%d")}.csv")
   end
-  
+
   def accounts
     @current_order_by  = order_by(8, 4)
     @current_direction = direction('DESC')
-    
+
     page_params = [
       nil, # the fist column has no order
       { :order => "accounts.name_for_sorting #@current_direction, accounts.created_at #@current_direction" },
@@ -93,7 +93,7 @@ class BackofficeController < ApplicationController
       { :order => "accounts.created_at #@current_direction" },
       { :order => "users.last_seen_at #@current_direction, accounts.created_at #@current_direction" }
     ]
-    
+
     if @current_order_by < page_params.length && page_params[@current_order_by]
       @account_pages, @accounts = paginate(
         :accounts, {
@@ -104,10 +104,10 @@ class BackofficeController < ApplicationController
     else
       select = 'accounts.id, accounts.name, accounts.created_at, accounts.owner_id, accounts.short_name'
       @account_pages = Paginator.new(self, Account.count, CONFIG['pagination_window_for_backoffice'], params[:page])
-      
+
       if @current_order_by == page_params.length # invoices
         @accounts = Account.find_by_sql(<<-SQL)
-          SELECT #{select} FROM accounts 
+          SELECT #{select} FROM accounts
           LEFT OUTER JOIN (
             SELECT account_id, COUNT(id) as ninvoices FROM invoices GROUP BY account_id
           ) as invoice_counters
@@ -118,7 +118,7 @@ class BackofficeController < ApplicationController
         SQL
       elsif @current_order_by == page_params.length + 1 # customers
         @accounts = Account.find_by_sql(<<-SQL)
-          SELECT #{select} FROM accounts 
+          SELECT #{select} FROM accounts
           LEFT OUTER JOIN (
             SELECT account_id, COUNT(id) as ncustomers FROM customers GROUP BY account_id
           ) as customer_counters
@@ -131,7 +131,7 @@ class BackofficeController < ApplicationController
     end
     render :partial => 'list' if request.xhr?
   end
-  
+
   def ensure_user_is_root
     if session[:root]
       return true
@@ -141,6 +141,6 @@ class BackofficeController < ApplicationController
     end
   end
   private :ensure_user_is_root
-  
+
   #this_controller_only_responds_to_https
 end
