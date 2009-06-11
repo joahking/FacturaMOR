@@ -49,18 +49,18 @@ class ApplicationController < ActionController::Base
     # because in that case routes rules make Rails set the login_token back in the URL and
     # that produces infinite recursion.
     if logged_in_as_guest?
-      redirect_to_url "http://www.#{account_domain}"
+      redirect_to "http://www.#{account_domain}"
     else
       redirect_to :controller => 'account', :action => 'login', :login_token => nil
     end
     false
   end
-  
+
   def ensure_can_write
     can_write? ? true : logout
   end
   protected :ensure_can_write
-  
+
   def ensure_can_read_all
     can_read_all? ? true : logout
   end
@@ -71,19 +71,19 @@ class ApplicationController < ActionController::Base
     @current_controller = controller_name
   end
   protected :set_controller_and_action_names
-  
+
   # We need this redirection not only for users, I founded that some bots
   # request public pages to our domain directly. We need to respond
   # with the appropiate redirection so they don't index the error page.
   # They would because the error page is a successful HTTP response.
   def ensure_subdomain
     if account_subdomain.blank?
-      redirect_to_url "http://www.#{account_domain}#{request.request_uri}"
+      redirect_to "http://www.#{account_domain}#{request.request_uri}"
       return false
     end
     return true
   end
-  
+
   # Prevents account sites from accessing to the public side. This filter
   # assumes the root page is not under public, which is to be expected, and
   # redirects there if needed. In factura the root page is configured in
