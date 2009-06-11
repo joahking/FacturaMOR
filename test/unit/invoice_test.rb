@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class InvoiceTest < Test::Unit::TestCase
+class InvoiceTest < ActiveSupport::TestCase
   fixtures :accounts, :users, :chpass_tokens, :customers, :countries, :invoices, :invoice_lines, :addresses
   
   NEW_INVOICE = {:number => "2009_1111", :date => Time.now.to_s(:db),:account_id => 1, :customer_id => 1}	# e.g. {:name => 'Test Invoice', :description => 'Dummy'}

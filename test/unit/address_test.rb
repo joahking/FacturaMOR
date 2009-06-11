@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class AddressTest < Test::Unit::TestCase
+class AddressTest < ActiveSupport::TestCase
   fixtures :accounts, :users, :chpass_tokens, :customers, :countries, :invoices, :invoice_lines, :addresses
 
   NEW_ADDRESS = {:country_id => 71, :addressable_id => 1, :addressable_type => 'Customer'}

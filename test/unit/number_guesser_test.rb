@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class NumberGuesserTest < Test::Unit::TestCase
+class NumberGuesserTest < ActiveSupport::TestCase
   
   def guess(*numbers)
     Invoice.send(:guess_next_number_aux, numbers)

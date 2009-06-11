@@ -4,11 +4,11 @@ require 'invoices_controller'
 # Re-raise errors caught by the controller.
 class InvoicesController; def rescue_action(e) raise e end; end
 
-class InvoicesControllerTest < Test::Unit::TestCase
+class InvoicesControllerTest < ActionController::TestCase
   fixtures :countries, :accounts, :users, :chpass_tokens, :customers, :login_tokens, :fiscal_datas, :invoices, :invoice_lines, :addresses
 
   NEW_INVOICE = {:number => '2009_1111', :date => Time.now.to_s(:db),
-                 :customer_id => 1, :discount_percent => 2, 
+                 :customer_id => 1, :discount_percent => 2,
                  :iva_percent => 16, :footer => 'test' }
   REDIRECT_TO_MAIN = {:action => 'list'} # put hash or string redirection that you normally expect
 
@@ -17,7 +17,7 @@ class InvoicesControllerTest < Test::Unit::TestCase
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
 
-    @first = Invoice.find(:first)                
+    @first = Invoice.find(:first)
     @request.user_agent = 'Firefox'
     @request.host = "quentin.#{DOMAIN_NAME}"
     login_as :quentin
@@ -28,37 +28,37 @@ class InvoicesControllerTest < Test::Unit::TestCase
     assert_response :redirect
     assert_redirected_to 'invoices/new'
   end
-  
+
   def test_list
     get :list
     assert_response :success
-    assert_template 'list'    
+    assert_template 'list'
     invoices = check_attrs(%w(invoices))
     assert_equal Invoice.find(:all).length, invoices.length, "Incorrect number of invoices shown"
   end
-  
+
   def test_new
     get :new
     assert_response :success
     assert_template 'new'
   end
-  
+
   def test_create
     invoice_count = Invoice.find(:all).length
-    post :create, {:invoice => NEW_INVOICE, :guessed_number => '2009_1111', :amount => '1.0', 
-      :description => 'test', :price => '2000.0'}    
+    post :create, {:invoice => NEW_INVOICE, :guessed_number => '2009_1111', :amount => '1.0',
+      :description => 'test', :price => '2000.0'}
     invoice = check_attrs(%w(invoice))
     assert_response :redirect
-    assert_redirected_to 'invoices/show'
+    assert_redirected_to 'invoices/show/2009_1111'
     assert_equal invoice_count + 1, Invoice.find(:all).length, "Expected an additional Invoice"
   end
-  
+
   def test_edit_with_get
     get :edit, :id => '2009_0001'
     assert_response :success
     assert_template 'edit'
   end
-  
+
   def test_edit_with_post
     changed_invoice = NEW_INVOICE.merge({:number => '2009_0001',:date => Time.now.to_s(:db)})
     post :edit, {:id => '2009_0001', :invoice => changed_invoice}
@@ -68,9 +68,9 @@ class InvoicesControllerTest < Test::Unit::TestCase
       assert_equal changed_invoice[attr_name], invoice.attributes[attr_name], "@invoice.#{attr_name.to_s} incorrect"
     end
     assert_response :redirect
-    assert_redirected_to "invoices/show"
+    assert_redirected_to "invoices/show/2009_0001"
   end
-   
+
   def test_destroy
     invoice_count = Invoice.find(:all).length
     @request.env["HTTP_REFERER"] = '/invoices/list'

@@ -4,7 +4,7 @@ require 'backoffice_controller'
 # Re-raise errors caught by the controller.
 class BackofficeController; def rescue_action(e) raise e end; end
 
-class BackofficeControllerTest < Test::Unit::TestCase
+class BackofficeControllerTest < ActionController::TestCase
   fixtures :accounts, :users, :chpass_tokens, :customers, :login_tokens, :fiscal_datas, :countries, :invoices, :invoice_lines, :addresses
   def setup
     @controller = BackofficeController.new

@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class CustomerTest < Test::Unit::TestCase
+class CustomerTest < ActiveSupport::TestCase
   fixtures :accounts, :users, :chpass_tokens, :customers, :countries, :invoices, :invoice_lines, :addresses
 
   NEW_CUSTOMER = {:name => 'Test Customer'}

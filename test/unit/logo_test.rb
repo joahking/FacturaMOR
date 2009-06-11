@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class LogoTest < Test::Unit::TestCase
+class LogoTest < ActiveSupport::TestCase
   fixtures :logos
 
   # Replace this with your real tests.

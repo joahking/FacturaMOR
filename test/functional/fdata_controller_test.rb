@@ -4,7 +4,7 @@ require 'fdata_controller'
 # Re-raise errors caught by the controller.
 class FdataController; def rescue_action(e) raise e end; end
 
-class FdataControllerTest < Test::Unit::TestCase
+class FdataControllerTest < ActionController::TestCase
   fixtures :countries, :accounts, :users, :chpass_tokens, :customers, :login_tokens, :fiscal_datas, :invoices, :invoice_lines, :addresses
   NEW_FISCAL_DATA = {:name => 'aaron', :cif => 'A08065021'}
   

@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class InvoicePdfTest < Test::Unit::TestCase
+class InvoicePdfTest < ActiveSupport::TestCase
   fixtures :accounts, :users, :chpass_tokens, :customers, :countries, :invoices, :invoice_lines, :addresses
 
   # Replace this with your real tests.

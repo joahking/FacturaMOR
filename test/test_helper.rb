@@ -2,7 +2,7 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
 
-class Test::Unit::TestCase
+class ActiveSupport::TestCase
   include AuthenticatedTestHelper
   # Transactional fixtures accelerate your tests by wrapping each test method
   # in a transaction that's rolled back on completion.  This ensures that the
@@ -29,21 +29,21 @@ class Test::Unit::TestCase
 end
 
 module ActionController
-  class TestRequest < AbstractRequest
-    attr_accessor :user_agent    
+  class TestRequest < Request
+    attr_accessor :user_agent
     def referer; return "http://www.test.com"; end
   end
 end
 module ApplicationHelper
   @@country_choices = [['España',71]]
   @@spain_id        = 71
-end   
-module SecureActions  
+end
+module SecureActions
   protected
   # Called when URLs are generated.
   def default_url_options(options)
-    defaults      = {}    
-    options.delete :override_only_path     
+    defaults      = {}
+    options.delete :override_only_path
     return defaults
   end
 end

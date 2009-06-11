@@ -4,7 +4,7 @@ require 'public_controller'
 # Re-raise errors caught by the controller.
 class PublicController; def rescue_action(e) raise e end; end
 
-class PublicControllerTest < Test::Unit::TestCase 
+class PublicControllerTest < ActionController::TestCase 
   fixtures :countries, :accounts, :users, :chpass_tokens, :customers, :login_tokens, :fiscal_datas, :invoices, :invoice_lines, :addresses
 
   def setup

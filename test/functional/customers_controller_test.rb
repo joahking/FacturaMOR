@@ -4,7 +4,7 @@ require 'customers_controller'
 # Re-raise errors caught by the controller.
 class CustomersController; def rescue_action(e) raise e end; end
 
-class CustomersControllerTest < Test::Unit::TestCase
+class CustomersControllerTest < ActionController::TestCase
   fixtures :countries, :accounts, :users, :chpass_tokens, :customers, :login_tokens, :fiscal_datas, :invoices, :invoice_lines, :addresses
 
   NEW_CUSTOMER = {:name => 'Test Customer', :cif => 'A08065021'}

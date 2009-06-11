@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class NifNieCifValidatorTest < Test::Unit::TestCase
+class NifNieCifValidatorTest < ActiveSupport::TestCase
   
   def nif?(code)
     FacturagemUtils.nif?(code)
