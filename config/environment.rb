@@ -59,26 +59,6 @@ end
 
 # Include your application configuration below
 
-# The idiomatic way to do this is to write a plugin, but I don't have time to do that.
-class ActiveRecord::Base
-  # This class method generates methods like this one:
-  #
-  # def first_name=(fname)
-  #    write_attribute(:first_name, fname)
-  #    write_attribute(:first_name_for_sorting, FacturagemUtils.normalize_for_sorting(fname))
-  #  end
-  def self.add_for_sorting_to(*fields)
-    fields.each do |f|
-      class_eval <<-EOS
-        def #{f}=(v)
-          write_attribute(:#{f}, v)
-          write_attribute(:#{f}_for_sorting, FacturagemUtils.normalize_for_sorting(v))
-        end
-      EOS
-    end
-  end
-end
-
 # Hack to prototype in Spanish, we'll add l10n-simplified when dates etc. are localized.
 # ActiveRecord::Errors.default_error_messages = {
 #   :inclusion           => "no está incluido en la lista",
