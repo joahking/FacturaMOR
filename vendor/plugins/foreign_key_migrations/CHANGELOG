@@ -1,3 +1,39 @@
+[REVISION 20080131]
+
+[FIXED] Stack-level too deep.
+
+[NEW] Generate foreign keys for databases that currently have none. Doesn't check to see if the foreign key already exists, nor does it drop the foreign keys yet.
+
+[REVISION 20071128]
+
+[FIXED] Workaround to ensure plugin is only ever loaded once.
+
+[REVISION 20070905]
+
+[FIXED] "some_column_name" referenced in foreign key constraint does not exist.
+
+[REVISION 20070904]
+
+[NEW] Support :references keyword when calling primary_key().
+
+[NEW] [#11995] the parameter :references needs the second argument referencing the field name.
+
+[REVISION 20070707]
+
+[NEW] Support acts_as_tree convention: if a column is named parent_id it will be treated as a circular reference to the table in which it is defined.
+
+[REVISION 20070703]
+
+[FIXED] Foreign-keys not created when using add_column.
+
+[REVISION 20070628]
+
+[FIXED] Stack level too deep in 'add_column_without_foreign_key_migrations' (Ronen Barzel).
+
+[REVISION 20070503]
+
+[NEW] Support for SQL92 [NOT] DEFERRABLE on foreign keys.
+
 [REVISION 20061202]
 
 [CHANGED] Use Rails 1.2 alias_method_chain.
