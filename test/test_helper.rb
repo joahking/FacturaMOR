@@ -34,10 +34,12 @@ module ActionController
     def referer; return "http://www.test.com"; end
   end
 end
+
 module ApplicationHelper
   @@country_choices = [['España',71]]
   @@spain_id        = 71
 end
+
 module SecureActions
   protected
   # Called when URLs are generated.

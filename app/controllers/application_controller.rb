@@ -13,34 +13,31 @@ class ApplicationController < ActionController::Base
 
   filter_parameter_logging :password
 
+  def self.xhr_only(method_name)
+    verify :xhr => true, :only => method_name, :render => {:nothing => true}
+  end
+
+  # A controller makes this call to declare all their actions run behind SSL.
+  # The call must be put at the bottom of the code, so that the public methods
+  # are known and returned by public_instance_methods.
+  def self.this_controller_only_responds_to_https
+    include SecureActions
+    require_ssl(*self.public_instance_methods(false).map(&:to_sym))
+  end
+
   def logout
     reset_session
-    # We need an explicit :login_token => nil if we come from a login with invalid token,
-    # because in that case routes rules make Rails set the login_token back in the URL and
-    # that produces infinite recursion.
+    # We need an explicit :login_token => nil if we come from a login with
+    # invalid token, because in that case routes rules make Rails set the
+    # login_token back in the URL and that produces infinite recursion.
     if logged_in_as_guest?
       redirect_to "http://www.#{account_domain}"
     else
-      redirect_to :controller => 'account', :action => 'login', :login_token => nil
+      redirect_to(:controller => 'account', :action => 'login',
+                  :login_token => nil)
     end
     false
   end
-
-  def ensure_can_write
-    can_write? ? true : logout
-  end
-  protected :ensure_can_write
-
-  def ensure_can_read_all
-    can_read_all? ? true : logout
-  end
-  protected :ensure_can_read_all
-
-  def set_controller_and_action_names
-    @current_action     = action_name
-    @current_controller = controller_name
-  end
-  protected :set_controller_and_action_names
 
   # We need this redirection not only for users, I founded that some bots
   # request public pages to our domain directly. We need to respond
@@ -66,6 +63,61 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # Paginates an existing ActiveRecord result set, returning the Paginator and
+  # collection slice.
+  #
+  # Based upon:
+  # http://www.bigbold.com/snippets/posts/show/389
+  #
+  def paginate_collection(collection, options = {})
+    options[:page] = options[:page] || params[:page] || 1
+    default_options = {:per_page => CONFIG['pagination_window'], :page => 1}
+    options = default_options.merge(options)
+
+    pages = Paginator.new(self, collection.size, options[:per_page],
+                          options[:page])
+    first = pages.current.offset
+    last = [first + options[:per_page], collection.size].min
+    slice = collection[first...last]
+    return [pages, slice]
+  end
+
+  # see http://www.iopus.com/imacros/demo/v6/user-agent.htm
+  def request_from_a_mac?
+    !request.env['HTTP_USER_AGENT'].downcase.index('macintosh').nil?
+  end
+
+  # see http://www.iopus.com/imacros/demo/v6/user-agent.htm
+  def request_from_windows?
+    !request.env['HTTP_USER_AGENT'].downcase.index('windows').nil?
+  end
+
+  # Send alerts on key events to monitor the health of the application.
+  def devalert(subject, body='', extra_to=[])
+    Mailer.deliver_devalert("[#{APP_NAME}] #{subject}", body, extra_to) if RAILS_ENV == 'production'
+  end
+
+  def handle_eventual_announcement
+    if !CONFIG['announcement'].blank? && !session[:hide_announcement]
+      @announcement = ERB.new(CONFIG['announcement']).result(binding)
+    end
+  end
+
+  protected
+
+  def ensure_can_write
+    can_write? ? true : logout
+  end
+
+  def ensure_can_read_all
+    can_read_all? ? true : logout
+  end
+
+  def set_controller_and_action_names
+    @current_action     = action_name
+    @current_controller = controller_name
+  end
+
   def find_account
     @current_account = Account.find_by_short_name(account_subdomain)
     if !@current_account || @current_account.blocked?
@@ -74,7 +126,6 @@ class ApplicationController < ActionController::Base
       return false
     end
   end
-  protected :find_account
 
   def find_user_or_guest
     # if the account was just created perform auto-login of the owner
@@ -122,31 +173,12 @@ class ApplicationController < ActionController::Base
       return false
     end
   end
-  protected :find_user_or_guest
 
   def ensure_we_have_fiscal_data
     if @current_account.fiscal_data.nil?
       redirect_to :controller => 'fdata', :action => 'new'
       return false
     end
-  end
-  protected :ensure_we_have_fiscal_data
-
-  # Paginates an existing AR result set, returning the Paginator and collection slice.
-  #
-  # Based upon:
-  # http://www.bigbold.com/snippets/posts/show/389
-  #
-  def paginate_collection(collection, options = {})
-    options[:page] = options[:page] || params[:page] || 1
-    default_options = {:per_page => CONFIG['pagination_window'], :page => 1}
-    options = default_options.merge(options)
-
-    pages = Paginator.new(self, collection.size, options[:per_page], options[:page])
-    first = pages.current.offset
-    last = [first + options[:per_page], collection.size].min
-    slice = collection[first...last]
-    return [pages, slice]
   end
 
   # Robust computation of +order_by+ for column ordering in tables. This
@@ -168,7 +200,6 @@ class ApplicationController < ActionController::Base
     end
     order_by
   end
-  protected :order_by
 
   # Robust computation of +direction+ for column ordering in tables.
   # This method checks +params+ for a <tt>:direction</tt> key and tries
@@ -181,39 +212,5 @@ class ApplicationController < ActionController::Base
       direction = default unless ['ASC', 'DESC'].include?(direction)
     end
     direction
-  end
-  protected :direction
-
-  def self.xhr_only(method_name)
-    verify :xhr => true, :only => method_name, :render => {:nothing => true}
-  end
-
-  # see http://www.iopus.com/imacros/demo/v6/user-agent.htm
-  def request_from_a_mac?
-    !request.env['HTTP_USER_AGENT'].downcase.index('macintosh').nil?
-  end
-
-  # see http://www.iopus.com/imacros/demo/v6/user-agent.htm
-  def request_from_windows?
-    !request.env['HTTP_USER_AGENT'].downcase.index('windows').nil?
-  end
-
-  # Send alerts on key events to monitor the health of the application.
-  def devalert(subject, body='', extra_to=[])
-    Mailer.deliver_devalert("[#{APP_NAME}] #{subject}", body, extra_to) if RAILS_ENV == 'production'
-  end
-
-  # A controller makes this call to declare all their actions run behind SSL.
-  # The call must be put at the bottom of the code, so that the public methods
-  # are known and returned by public_instance_methods.
-  def self.this_controller_only_responds_to_https
-    include SecureActions
-    require_ssl(*self.public_instance_methods(false).map(&:to_sym))
-  end
-
-  def handle_eventual_announcement
-    if !CONFIG['announcement'].blank? && !session[:hide_announcement]
-      @announcement = ERB.new(CONFIG['announcement']).result(binding)
-    end
   end
 end

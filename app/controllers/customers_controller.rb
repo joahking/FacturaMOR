@@ -1,14 +1,14 @@
 class CustomersController < ApplicationController
   include LoginUrlHelper
-  
+
   before_filter :ensure_can_write, :except => [:index, :list, :show]
   before_filter :ensure_can_read_all, :only => [:index, :list]
   before_filter :find_customer, :except => [:list, :new, :create_for_invoice]
-  
+
   def index
     redirect_to :action => 'list'
   end
-  
+
   # Customers listing.
   def list
     @current_order_by  = order_by(1, 0)
@@ -24,14 +24,14 @@ class CustomersController < ApplicationController
     )
     render :partial => 'list' if request.xhr?
   end
-  
+
   # Customer details.
   def show
     return logout unless can_read_customer?(@customer)
     @subject = ERB.new(CONFIG['customer_login_url_mail_subject']).result(binding)
     @body    = ERB.new(CONFIG['customer_login_url_mail_body']).result(binding)
   end
-  
+
   # This is the action that gets called from the redbox in the
   # invoice form.
   def create_for_invoice
@@ -56,7 +56,7 @@ class CustomersController < ApplicationController
       redirect_to :action => 'list' if @customer.save
     end
   end
-  
+
   # Customer edition, GET and POST.
   def edit
     return if request.get?
@@ -78,7 +78,9 @@ class CustomersController < ApplicationController
       redirect_to :action => 'show', :id => @customer
     end
   end
-  
+
+  protected
+
   def find_customer
     customer = nil
     unless params[:id].blank?
@@ -90,7 +92,4 @@ class CustomersController < ApplicationController
     end
     @customer = customer
   end
-  protected :find_customer
-    
-  #this_controller_only_responds_to_https
 end

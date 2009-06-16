@@ -1,15 +1,15 @@
-class PublicController < ApplicationController  
+class PublicController < ApplicationController
   include SecureActions
-#  require_ssl :login, :signup
+  # require_ssl :login, :signup
 
   before_filter :register_referer_and_landing_page
-  
+
   skip_before_filter :find_account
   skip_before_filter :find_user_or_guest
   skip_before_filter :ensure_we_have_fiscal_data
 
   def index
-  end 
+  end
 
   def login
     if request.post?
@@ -62,13 +62,13 @@ class PublicController < ApplicationController
       end
     end
   end
-  
+
   def create_account
     params[:account][:short_name] = FacturagemUtils.normalize_for_url_id(params[:account][:short_name])
     @account = Account.new(params[:account])
     @account_owner = User.new(params[:account_owner])
     @account.users << @account_owner
-    
+
     v1 = @account_owner.valid?
     v2 = @account.valid?
     if v1 && v2 # we do it this way to ensure all validations are run
@@ -100,11 +100,11 @@ Esta es el alta número #{Account.count}.
     return false
   end
   private :create_account
-  
+
   def terms_of_service
     render :action => 'terms_of_service', :layout => false
   end
-  
+
   # This method is not used currently.
   def suggest_short_name
     suggestion = FacturagemUtils.normalize_for_url_id(params[:name])
@@ -122,7 +122,7 @@ Esta es el alta número #{Account.count}.
     end
   end
   xhr_only :suggest_short_name
-  
+
   def check_availability_of_short_name
     sn = FacturagemUtils.normalize_for_url_id(params[:short_name])
     available = '<em style="color: #0FC10B">(disponible)<em>'
@@ -135,7 +135,7 @@ Esta es el alta número #{Account.count}.
       page.replace_html 'available', available
     end
   end
-  
+
   # Stores the referer and landing page to register them if there's a signup.
   def register_referer_and_landing_page
     session[:referer]      ||= request.referer
@@ -154,8 +154,8 @@ Esta es el alta número #{Account.count}.
   private :clean_tracking_stuff_from_session
 
     #To check Exception Notifier
-  def error  
-    raise RuntimeError, "Generating an error"  
+  def error
+    raise RuntimeError, "Generating an error"
   end
-  
+
 end
