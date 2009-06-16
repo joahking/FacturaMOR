@@ -2,7 +2,7 @@
 <div id="FacturaDatos">
   <div class="Text13Grey" style="padding: 30px;">
     <div class="Title18Grey">Exportación de facturas</div>
-    <%= form_tag %>
+    <% form_tag do %>
       <p>
         <label for="period"><span class="Title13Grey">Periodo</span></label><br />
         <select name="period">
@@ -34,6 +34,6 @@
       <p>
         <%= submit_tag 'Exportar facturas', :class => 'button' %>
       </p>
-    <%= end_form_tag %>
+    <% end %>
   </div>
 </div>
