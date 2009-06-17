@@ -9,8 +9,8 @@ class InvoicesController < ApplicationController
   before_filter :ensure_can_write, :except => [:index, :of, :list, :pending, :show, :pdf, :export, :logo]
   before_filter :find_invoice, :only => [:show, :edit, :destroy, :pdf, :toggle_paid_status, :logo, :update_account]
 
-  @@INVOICE_TEMPLATE = File.read(File.join(RAILS_ROOT, 'config', 'invoice.tex.erb'))
-  @@INVOICE_DIRECTORY = File.join(RAILS_ROOT, 'tmp', 'latex')
+  INVOICE_TEMPLATE = File.read(Rails.root.join('config', 'invoice.tex.erb'))
+  INVOICE_DIRECTORY = Rails.root.join('tmp', 'latex')
 
   def index
     action = logged_in_as_guest? ? 'list' : 'new'
@@ -247,7 +247,7 @@ BODY
     # as strict as not accepting JPEGS as files with extension ".jpeg".
     @logo_path = (File.expand_path(@invoice.logo.create_temp_file(:pdf).path) rescue nil)
     @logo_path = fix_logo_for_graphicx(@logo_path) if @logo_path
-    latex = ERB.new(@@INVOICE_TEMPLATE, nil, ">").result(binding)
+    latex = ERB.new(INVOICE_TEMPLATE, nil, ">").result(binding)
     data = process_latex(latex)
     @invoice.create_pdf(:data => data) if data
   end
@@ -289,7 +289,8 @@ BODY
 
     # batchmode is important, by default the command waits for input if there's a problem with the PDF.
     # the -option-directory flag is not supported in the production machine
-    Dir.chdir(@@INVOICE_DIRECTORY) do
+    FileUtils.mkdir_p(INVOICE_DIRECTORY)
+    Dir.chdir(INVOICE_DIRECTORY) do
       File.open(source, "w") {|fh| fh.write(latex)}
       success = false
       silence_stream(STDOUT) do
