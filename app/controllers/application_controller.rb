@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
   def check_access_to_public
     if controller_name == 'public' && account_subdomain != 'www'
       logger.info("attempt to access to a public action from an account site")
-      redirect_to_url account_url(account_subdomain)
+      redirect_to account_url(account_subdomain)
       return false
     end
   end
@@ -122,7 +122,7 @@ class ApplicationController < ActionController::Base
     @current_account = Account.find_by_short_name(account_subdomain)
     if !@current_account || @current_account.blocked?
       logger.info("there's no account with short name #{account_subdomain}, redirecting to the home")
-      redirect_to_url "http://www.#{account_domain}"
+      redirect_to "http://www.#{account_domain}"
       return false
     end
   end
