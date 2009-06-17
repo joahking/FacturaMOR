@@ -1,4 +1,13 @@
 # == Schema Information
+#
+# Table name: invoice_pdfs
+#
+#  id         :integer(4)      not null, primary key
+#  invoice_id :integer(4)      not null
+#  data       :binary          default(""), not null
+#
+
+# == Schema Information
 # Schema version: 7
 #
 # Table name: invoice_pdfs

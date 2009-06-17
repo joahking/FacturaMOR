@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: sessions
+#
+#  id         :integer(4)      not null, primary key
+#  session_id :string(255)
+#  data       :text
+#  updated_at :datetime
+#
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class SessionTest < ActiveSupport::TestCase

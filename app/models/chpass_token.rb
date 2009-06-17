@@ -1,4 +1,14 @@
 # == Schema Information
+#
+# Table name: chpass_tokens
+#
+#  id         :integer(4)      not null, primary key
+#  token      :string(255)     not null
+#  account_id :integer(4)
+#  created_at :datetime
+#
+
+# == Schema Information
 # Schema version: 7
 #
 # Table name: chpass_tokens

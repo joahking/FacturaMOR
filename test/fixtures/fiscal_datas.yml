@@ -1,4 +1,20 @@
 # == Schema Information
+#
+# Table name: fiscal_datas
+#
+#  id               :integer(4)      not null, primary key
+#  account_id       :integer(4)      not null
+#  name             :string(255)     not null
+#  name_for_sorting :string(255)
+#  cif              :string(255)     not null
+#  iva_percent      :decimal(10, 2)
+#  invoice_footer   :text
+#  irpf_percent     :decimal(10, 2)
+#  charges_irpf     :boolean(1)
+#  logo_id          :integer(4)
+#
+
+# == Schema Information
 # Schema version: 7
 #
 # Table name: fiscal_datas

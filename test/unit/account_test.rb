@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: accounts
+#
+#  id               :integer(4)      not null, primary key
+#  owner_id         :integer(4)
+#  short_name       :string(255)     not null
+#  blocked          :boolean(1)      not null
+#  name             :string(255)     not null
+#  name_for_sorting :string(255)
+#  bank_account     :string(255)
+#  direct_login     :boolean(1)
+#  referer          :string(1024)
+#  landing_page     :string(1024)
+#  created_at       :datetime
+#  updated_at       :datetime
+#
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class AccountTest < ActiveSupport::TestCase

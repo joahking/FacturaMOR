@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: customers
+#
+#  id               :integer(4)      not null, primary key
+#  url_id           :string(255)     not null
+#  account_id       :integer(4)      not null
+#  name             :string(255)
+#  name_for_sorting :string(255)
+#  cif              :string(255)     not null
+#  discount_percent :decimal(10, 2)
+#  notes            :text
+#  created_at       :datetime
+#  updated_at       :datetime
+#
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class CustomerTest < ActiveSupport::TestCase

@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: addresses
+#
+#  id               :integer(4)      not null, primary key
+#  street1          :string(255)
+#  street2          :string(255)
+#  city             :string(255)
+#  province         :string(255)
+#  postal_code      :string(255)
+#  country_id       :integer(4)
+#  addressable_id   :integer(4)
+#  addressable_type :string(255)
+#
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class AddressTest < ActiveSupport::TestCase

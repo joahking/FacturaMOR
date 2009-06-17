@@ -1,3 +1,11 @@
+# == Schema Information
+#
+# Table name: db_files
+#
+#  id   :integer(4)      not null, primary key
+#  data :binary
+#
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class DbFileTest < ActiveSupport::TestCase

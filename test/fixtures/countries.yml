@@ -1,4 +1,13 @@
 # == Schema Information
+#
+# Table name: countries
+#
+#  id               :integer(4)      not null, primary key
+#  name             :string(255)
+#  name_for_sorting :string(255)
+#
+
+# == Schema Information
 # Schema version: 7
 #
 # Table name: countries
