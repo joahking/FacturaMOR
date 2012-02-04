@@ -475,11 +475,26 @@ namespace :facturagem do
       :price => 543.32
     )
     invoice.save!
-    
+
     puts "created #{dummy_account.invoices.size} dummy invoices"
   end
-  
+
   desc 'DESTROYs the current database, if any, and creates a new one with dummy models'
   task :init_for_development => [:create_database, :init, :create_dummy_models] do
   end
+
+  file 'config/database.yml' => 'config/database.yml.example'
+  task :database_yml => 'config/database.yml'
+
+  file 'config/local_config.rb' => 'config/local_config.rb.example'
+  task :local_config_rb => 'config/local_config.rb'
+
+  file 'config/facturagem.yml' => 'config/facturagem.yml.example'
+  task :facturagem_yml => 'config/facturagem.yml'
+
+  desc 'copies all needed config files'
+  task :configs => [:database_yml, :local_config_rb, :facturagem_yml] do
+
+  end
+
 end
