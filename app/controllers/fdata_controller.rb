@@ -53,10 +53,12 @@ class FdataController < ApplicationController
     @fiscal_data.account.owner.attributes = params[:owner]
     @fiscal_data.address.attributes = params[:address]
 
-    # If a new logo is uploaded we need to associate a brand new
-    # object to fiscal_data instead of updating the current logo,
-    # because that one may be linked to existing invoices.
-    @fiscal_data.build_logo(params[:logo]) unless params[:logo][:uploaded_data].size.zero?
+    if params[:logo]
+      # If a new logo is uploaded we need to associate a brand new
+      # object to fiscal_data instead of updating the current logo,
+      # because that one may be linked to existing invoices.
+      @fiscal_data.build_logo(params[:logo]) unless params[:logo][:uploaded_data].size.zero?
+    end
 
     if @fiscal_data.valid? && !@wrong_password # run validations even if the password was not correct
       FiscalData.transaction do
