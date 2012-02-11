@@ -22,7 +22,7 @@
     <tr>
       <%# we use here IDs with underscores because the autocompleter helper uses them as JavaScript variables %>
       <td class="CellTableLine"><input type="text" onkeypress="return add_new_line_to_invoice_on_return(event)" id="invoice_new_line_amount" name="new_line_amount" class="TableUnderline numeric incell" value="1" maxlength="7" /></td>
-      <td class="CellTableLine"><%= invoice_new_line_description_auto_completer :id => "invoice_new_line_description", :name => 'new_line_description', :class => 'TableUnderline text incell', :maxlength => 1000 %></td>
+      <td class="CellTableLine"><input type="text" onkeypress="return add_new_line_to_invoice_on_return(event)" id="invoice_new_line_description" name="new_line_description" class="TableUnderline numeric incell" maxlength="255" /></td>
       <td class="CellTableLine"><input type="text" onkeypress="return add_new_line_to_invoice_on_return(event)" id="invoice_new_line_price" name="new_line_price" class="TableUnderline numeric incell" maxlength="11" /></td>
       <td class="CellTableLine">&nbsp;</td>
       <td class="Title12Orange CellTableLine"><%= link_to_remote(image_tag('icon-add.gif', :style => 'vertical-align: middle') + '&nbsp;Añadir', {:url => {:action => 'add_new_line'}, :submit => 'invoice-form'}) %></td>
