@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'digest/sha1'
 
 module ApplicationHelper
@@ -8,12 +9,12 @@ module ApplicationHelper
   # will be called "country_id". If the model has no contry selected Spain is
   # preselected. We cache the country table in order and the Spain country to
   # speed this up.
-  @@country_choices = Country.find(:all, :order => 'name_for_sorting ASC').map {|c| [c.name, c.id]} rescue nil
-  @@spain_id        = Country.find_by_name_for_sorting('espana').id rescue Country.find_by_name_for_sorting('espana')[:id] rescue nil
   def country_selector(object, method, options = {}, html_options = {})
+    country_choices = Country.find(:all, :order => 'name_for_sorting ASC').map {|c| [c.name, c.id]} rescue nil
+    spain_id        = Country.find_by_name_for_sorting('espana').id rescue Country.find_by_name_for_sorting('espana')[:id] rescue nil
     real_object = instance_variable_get("@#{object}")
-    options = {:selected => @@spain_id}.merge(options) unless real_object.send(method)
-    select object, method, @@country_choices, options, html_options
+    options = {:selected => spain_id}.merge(options) unless real_object.send(method)
+    select object, method, country_choices, options, html_options
   end
   
   # The application logo as an image tag.
