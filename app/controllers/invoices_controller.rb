@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'set'
 require 'iconv'
 
@@ -19,7 +20,7 @@ class InvoicesController < ApplicationController
 
   def list
     if can_read_all?
-      @invoice_pages, @invoices = paginator("invoices.account_id = #{@current_account.id}")
+      @invoices = Invoice.find_all_by_account_id(@current_account.id)
       respond_to do |format|
         format.html { render :action => 'list' }
         format.js   { render :partial => 'list' }
