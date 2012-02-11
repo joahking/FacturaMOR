@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   include AccountLocation
-  include ExceptionNotifiable
+#  include ExceptionNotifiable
 
   before_filter :set_controller_and_action_names
   before_filter :ensure_subdomain
