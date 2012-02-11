@@ -21,9 +21,13 @@ module ApplicationHelper
     image_tag 'logo.png', :alt => "#{APP_NAME}: facturación fácil", :title => "#{APP_NAME}: facturación fácil"
   end
   
+  def account_domain
+    "localhost:3000"
+  end
+
   # Returns the logo of the application already linked to the (public) home.
   def facturagem_logo_linked_to_home
-    link_to facturagem_logo, "http://www.#{account_domain}"
+    link_to facturagem_logo, account_domain
   end
 
   # Based on http://labnol.blogspot.com/2006/08/how-to-embed-flv-flash-videos-in-your.html.

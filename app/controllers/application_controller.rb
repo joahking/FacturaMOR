@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include AuthenticatedSystem
-  include AccountLocation
+#  include AccountLocation
 #  include ExceptionNotifiable
 
   before_filter :set_controller_and_action_names
@@ -39,16 +39,20 @@ class ApplicationController < ActionController::Base
     false
   end
 
+  def account_domain
+    "localhost:3000"
+  end
+
   # We need this redirection not only for users, I founded that some bots
   # request public pages to our domain directly. We need to respond
   # with the appropiate redirection so they don't index the error page.
   # They would because the error page is a successful HTTP response.
   def ensure_subdomain
-    if account_subdomain.blank?
-      redirect_to "http://www.#{account_domain}#{request.request_uri}"
-      return false
-    end
-    return true
+    # if account_subdomain.blank?
+    #   redirect_to "http://www.#{account_domain}#{request.request_uri}"
+    #   return false
+    # end
+    true
   end
 
   # Prevents account sites from accessing to the public side. This filter
@@ -56,11 +60,12 @@ class ApplicationController < ActionController::Base
   # redirects there if needed. In factura the root page is configured in
   # routes.rb.
   def check_access_to_public
-    if controller_name == 'public' && account_subdomain != 'www'
-      logger.info("attempt to access to a public action from an account site")
-      redirect_to account_url(account_subdomain)
-      return false
-    end
+    # if controller_name == 'public' && account_subdomain != 'www'
+    #   logger.info("attempt to access to a public action from an account site")
+    #   redirect_to account_url(account_subdomain)
+    #   return false
+    # end
+    true
   end
 
   # Paginates an existing ActiveRecord result set, returning the Paginator and
@@ -118,13 +123,17 @@ class ApplicationController < ActionController::Base
     @current_controller = controller_name
   end
 
+  def account_subdomain
+    account_domain
+  end
+
   def find_account
-    @current_account = Account.find_by_short_name(account_subdomain)
-    if !@current_account || @current_account.blocked?
-      logger.info("there's no account with short name #{account_subdomain}, redirecting to the home")
-      redirect_to "http://www.#{account_domain}"
-      return false
-    end
+    @current_account = Account.first #nd_by_short_name(account_subdomain)
+    # if !@current_account || @current_account.blocked?
+    #   logger.info("there's no account with short name #{account_subdomain}, redirecting to the home")
+    #   redirect_to "http://www.#{account_domain}"
+    #   return false
+    # end
   end
 
   def find_user_or_guest
