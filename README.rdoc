@@ -99,6 +99,14 @@ We need pdflatex in path (install tetex-bin, tetex-extra, latex-ucs, latex-xcolo
 or MiKTeX on Windows). The package cm-super makes fonts in PDFs look prettier, but it is necessary to have
 a working instance for development.
 
+pdflatex is needed :
+
+sudo apt-get install texlive-latex-base
+
+for missing fullpage.sty :
+
+sudo apt-get install texlive-latex-extra
+
 == TODO
 
 * Find a replacement for the old fiveruns_manage plugin (if needed)
