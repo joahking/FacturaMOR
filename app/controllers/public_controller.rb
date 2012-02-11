@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 class PublicController < ApplicationController
-  include SecureActions
+#  include SecureActions
   # require_ssl :login, :signup
 
   before_filter :register_referer_and_landing_page

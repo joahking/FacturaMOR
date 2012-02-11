@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 class AccountController < ApplicationController
   include LoginUrlHelper
-  include SecureActions
+  #include SecureActions
   
   skip_before_filter :find_user_or_guest, :except => :logout
   skip_before_filter :ensure_we_have_fiscal_data
