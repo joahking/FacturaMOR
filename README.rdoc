@@ -1,39 +1,8 @@
-== ImageMagick
+= A Rails invoice app
 
-No known version requirement.
+== Requiremets
 
-== mod_xsendfile (for production mode)
-
-  http://tn123.ath.cx/mod_xsendfile/
-
-== MySQL
-
-Stable version of MySQL 5.
-
-It is very important to set UTF-8 as charset of the database explicitly,
-like this:
-
-  drop database if exists gastosmini;
-  create database gastosmini character set utf8;
-  grant all on gastosmini.* to 'username'@'localhost' identified by 'password';
-
-or the equivalent if you use a wizard.
-
-The database is created with a task, see rake -T
-
-== Configuration files
-
-You need to create
-
-  config/facturagem.yml
-  config/database.yml
-  config/mailer.rb
-  config/local_config.rb (configuration of exception_notifier,google_analytics and others constants)
-
-taking their corresponding .example as a starting point.
-
-
-== LaTeX
+=== LaTeX
 
 We need pdflatex in path (install tetex-bin, tetex-extra, latex-ucs, latex-xcolor, cm-super in debians,
 or MiKTeX on Windows). The package cm-super makes fonts in PDFs look prettier, but it is necessary to have
@@ -47,6 +16,28 @@ for missing fullpage.sty :
 
     sudo apt-get install texlive-latex-extra
 
+=== ImageMagick
+
+No known version requirement.
+
+=== mod_xsendfile (for production mode) (OLD)
+
+  http://tn123.ath.cx/mod_xsendfile/
+
 == TODO
 
+* editing an invoice line moves it above the table
+* improve pdf names, better by client than by username?
+
+OLD
 * Find a replacement for the old fiveruns_manage plugin (if needed)
+
+== Configuration files (OLD)
+You need to create
+
+  config/facturagem.yml
+  config/database.yml
+  config/mailer.rb
+  config/local_config.rb (configuration of exception_notifier,google_analytics and others constants)
+
+taking their corresponding .example as a starting point.
